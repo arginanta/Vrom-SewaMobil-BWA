@@ -10,6 +10,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Contracts\DataTable;
 
+// Brand adalah sebuah model yang merepresentasikan tabel brands dalam database dan akan digunakan untuk melakukan query dan manipulasi data pada tabel tersebut.
+// Str adalah sebuah class utility untuk memanipulasi string.
+// DataTables adalah sebuah class yang menyediakan fitur untuk mengatur tampilan dan sifat dari sebuah tabel yang akan ditampilkan.
+// BrandRequest adalah sebuah class yang merepresentasikan form request yang digunakan untuk melakukan validasi data sebelum disimpan ke dalam database.
+
 class BrandController extends Controller
 {
     /**
@@ -52,7 +57,9 @@ class BrandController extends Controller
      */
     public function create()
     {
-        //
+
+        return view('admin.brands.create');
+        
     }
 
     /**
@@ -61,9 +68,20 @@ class BrandController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BrandRequest $request)
     {
-        //
+        // Untuk menyimpan data yang sudah kita inputkan
+        // return $request->all(); // Cek data
+
+        $data = $request->all();
+        $data['slug'] = Str::slug($data['name'] .  '-' . Str::lower(Str::random(5))); // agar saat create slug data tidak ada yang sama (Random)
+
+        // Untuk menyimpan data
+        Brand::create($data);
+
+        // return $data;
+
+        return redirect()->route('admin.brands.create')->with('success', 'Brand berhasil ditambahkan');
     }
 
     /**
@@ -83,9 +101,11 @@ class BrandController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Brand $brand)
     {
-        //
+        return view('admin.brands.edit', [
+            'brand' => $brand,
+        ]);
     }
 
     /**
@@ -95,9 +115,16 @@ class BrandController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(BrandRequest $request, Brand $brand)
     {
-        //
+        $data = $request->all();
+        $data['slug'] = Str::slug($data['name'] .  '-' . Str::lower(Str::random(5))); // berfungsi untuk menghasilkan string slug yang unik dari nama Brand dan 5 karakter random.
+
+        //  memperbarui data Brand di dalam database sesuai dengan data yang di-inputkan oleh user melalui form.
+        $brand->update();
+
+        // dipanggil untuk mengarahkan user kembali ke halaman daftar Brand setelah data berhasil diupdate.
+        return redirect()->route('admin.brands.index');
     }
 
     /**
@@ -106,8 +133,11 @@ class BrandController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Brand $brand)
     {
-        //
+        // method delete() dipanggil pada instance $brand untuk menghapusnya dari database
+        $brand->delete();
+
+        return redirect()->route('admin.brands.index');
     }
 }
