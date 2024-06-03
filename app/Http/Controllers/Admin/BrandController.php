@@ -7,8 +7,6 @@ use Illuminate\Support\Str;
 use Yajra\DataTables\DataTables;
 use App\Http\Requests\BrandRequest;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Yajra\DataTables\Contracts\DataTable;
 
 // Brand adalah sebuah model yang merepresentasikan tabel brands dalam database dan akan digunakan untuk melakukan query dan manipulasi data pada tabel tersebut.
 // Str adalah sebuah class utility untuk memanipulasi string.

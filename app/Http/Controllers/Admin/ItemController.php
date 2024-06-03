@@ -110,9 +110,17 @@ class ItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Item $item)
     {
-        //
+        // Memuat relasi 'brand' dan 'type'
+        $item->load('brand', 'type');
+
+        // Mengambil semua Brand dan Type
+        $brands = Brand::all();
+        $types = Type::all();
+
+        // Mengembalikan tampilan edit dengan data item, brands, dan types
+        return view('admin.items.edit', compact('item', 'brands', 'types'));
     }
 
     /**
@@ -122,9 +130,29 @@ class ItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ItemRequest $request, Item $item)
     {
-        //
+        $data = $request->all();
+
+        // If photos is not empty, then upload new photos
+        if ($request->hasFile('photos')) {
+            $photos = [];
+
+            foreach ($request->file('photos') as $photo) {
+                $photoPath = $photo->store('assets/item', 'public');
+
+                // Push as array
+                array_push($photos, $photoPath);
+            }
+
+            $data['photos'] = json_encode($photos);
+        } else {
+            $data['photos'] = $item->photos;
+        }
+
+        $item->update($data);
+
+        return redirect()->route('admin.items.index');
     }
 
     /**
@@ -133,8 +161,10 @@ class ItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Item $item)
     {
-        //
+        $item->delete();
+
+        return redirect()->route('admin.items.index');
     }
 }
