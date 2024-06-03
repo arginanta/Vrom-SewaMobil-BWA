@@ -20,7 +20,10 @@
                     </x-jet-nav-link>
                     <x-jet-nav-link href="{{ route('admin.types.index') }}" :active="request()->routeIs('admin.types.index')">
                         {{ __('Type') }}
-                    </x-jet-nav-link>
+                    </x-jet-nav-link> 
+                    <x-jet-nav-link href="{{ route('admin.items.index') }}" :active="request()->routeIs('admin.items.index')">
+                        {{ __('Item') }}
+                    </x-jet-nav-link>                  
                 </div>
             </div>
 
@@ -150,7 +153,10 @@
             </x-jet-responsive-nav-link>
             <x-jet-responsive-nav-link href="{{ route('admin.types.index') }}" :active="request()->routeIs('admin.types.index')">
                 {{ __('Type') }}
-            </x-jet-responsive-nav-link>
+            </x-jet-responsive-nav-link> 
+            <x-jet-responsive-nav-link href="{{ route('admin.items.index') }}" :active="request()->routeIs('admin.items.index')">
+                {{ __('Item') }}
+            </x-jet-responsive-nav-link>    
         </div>
 
         <!-- Responsive Settings Options -->
